@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claims Document Intake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F5F6F2;
+    --panel: #FFFFFF;
+    --ink: #1B2430;
+    --ink-muted: #5B6472;
+    --line: #DADDD4;
+    --seal: #2F6F62;
+    --seal-dark: #234F45;
+    --seal-soft: #E7F0EC;
+    --alert: #9C3B2E;
+    --alert-soft: #F6E9E6;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Public Sans', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    border-bottom: 1px solid var(--line);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  header svg { flex-shrink: 0; }
+
+  header .brand {
+    font-size: 14.5px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  header .brand small {
+    display: block;
+    font-weight: 400;
+    color: var(--ink-muted);
+    font-size: 12.5px;
+    margin-top: 1px;
+  }
+
+  main {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 56px 32px 80px;
+  }
+
+  h1 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 600;
+    font-size: 34px;
+    line-height: 1.2;
+    margin: 0 0 10px;
+    max-width: 20ch;
+  }
+
+  .lede {
+    color: var(--ink-muted);
+    font-size: 15.5px;
+    line-height: 1.6;
+    max-width: 52ch;
+    margin: 0 0 44px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 48px;
+  }
+
+  @media (max-width: 720px) {
+    .layout { grid-template-columns: 1fr; gap: 36px; }
+    main { padding: 40px 20px 60px; }
+    h1 { font-size: 28px; }
+  }
+
+  .requirements h2 {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    margin: 0 0 16px;
+  }
+
+  .requirements ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .requirements li {
+    display: flex;
+    gap: 10px;
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+  .requirements li:last-child { border-bottom: 1px solid var(--line); }
+
+  .requirements li .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--seal);
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+
+  .requirements .note {
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+
+  .dropzone {
+    background: var(--panel);
+    border: 1.5px dashed var(--line);
+    border-radius: 6px;
+    padding: 40px 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .dropzone.dragover {
+    border-color: var(--seal);
+    background: var(--seal-soft);
+  }
+
+  .dropzone .icon {
+    margin-bottom: 14px;
+  }
+
+  .dropzone p {
+    margin: 0;
+    font-size: 15px;
+  }
+
+  .dropzone .browse {
+    color: var(--seal-dark);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .dropzone .hint {
+    margin-top: 6px;
+    font-size: 12.5px;
+    color: var(--ink-muted);
+  }
+
+  input[type="file"] { display: none; }
+
+  .file-chip {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  .file-chip.visible { display: flex; }
+
+  .file-chip .name { font-weight: 500; word-break: break-all; padding-right: 12px; }
+  .file-chip .remove {
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-muted); font-size: 13px; text-decoration: underline;
+    flex-shrink: 0;
+  }
+
+  .submit-row { margin-top: 20px; }
+
+  button.submit {
+    background: var(--seal);
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  button.submit:disabled {
+    background: #A9B0AC;
+    cursor: not-allowed;
+  }
+
+  button.submit:hover:not(:disabled) { background: var(--seal-dark); }
+
+  .status {
+    margin-top: 24px;
+    padding: 16px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+    display: none;
+  }
+
+  .status.visible { display: block; }
+
+  .status.success {
+    background: var(--seal-soft);
+    border: 1px solid var(--seal);
+    color: var(--seal-dark);
+  }
+
+  .status.error {
+    background: var(--alert-soft);
+    border: 1px solid var(--alert);
+    color: var(--alert);
+  }
+
+  .status .stamp-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .status .stamp-row svg {
+    animation: stampIn 0.35s ease;
+  }
+
+  @keyframes stampIn {
+    from { transform: scale(0.6) rotate(-8deg); opacity: 0; }
+    to { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .status .stamp-row svg { animation: none; }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--seal-dark);
+    outline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <path d="M12 2L4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3z" stroke="#1B2430" stroke-width="1.4" stroke-linejoin="round"/>
+  </svg>
+  <div class="brand">
+    Meridian Assurance
+    <small>Claims document intake</small>
+  </div>
+</header>
+
+<main>
+  <h1>Upload your claim documents</h1>
+  <p class="lede">Send us your files and we'll attach them to your open claim. There's no need to email anything separately once they've been received here.</p>
+
+  <div class="layout">
+    <div class="requirements">
+      <h2>What to include</h2>
+      <ul>
+        <li><span class="dot"></span>A copy of your identity proof</li>
+        <li><span class="dot"></span>Your completed claim form</li>
+        <li><span class="dot"></span>Any supporting evidence — photos, receipts, or reports</li>
+      </ul>
+      <p class="note">Accepted formats: PDF, JPG, PNG. One file per upload, up to 25 MB. If you have several documents, upload them one at a time.</p>
+    </div>
+
+    <div class="upload-panel">
+      <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Choose a file to upload">
+        <div class="icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M12 15V4M12 4L7.5 8.5M12 4l4.5 4.5" stroke="#5B6472" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 15v3a2 2 0 002 2h12a2 2 0 002-2v-3" stroke="#5B6472" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <p>Drag a file here, or <span class="browse">browse from your device</span></p>
+        <p class="hint">PDF, JPG or PNG</p>
+      </div>
+      <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" />
+
+      <div class="file-chip" id="fileChip">
+        <span class="name" id="fileName"></span>
+        <button class="remove" id="removeFile" type="button">Remove</button>
+      </div>
+
+      <div class="submit-row">
+        <button class="submit" id="submitBtn" disabled>Upload document</button>
+      </div>
+
+      <div class="status" id="status"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('fileInput');
+  const fileChip = document.getElementById('fileChip');
+  const fileNameEl = document.getElementById('fileName');
+  const removeFile = document.getElementById('removeFile');
+  const submitBtn = document.getElementById('submitBtn');
+  const statusEl = document.getElementById('status');
+
+  let selectedFile = null;
+
+  function setFile(file) {
+    selectedFile = file;
+    if (file) {
+      fileNameEl.textContent = file.name;
+      fileChip.classList.add('visible');
+      submitBtn.disabled = false;
+    } else {
+      fileChip.classList.remove('visible');
+      submitBtn.disabled = true;
+    }
+    statusEl.className = 'status';
+    statusEl.textContent = '';
+  }
+
+  dropzone.addEventListener('click', () => fileInput.click());
+  dropzone.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+  });
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length) setFile(fileInput.files[0]);
+  });
+
+  ['dragenter', 'dragover'].forEach(evt =>
+    dropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      dropzone.classList.add('dragover');
+    })
+  );
+
+  ['dragleave', 'drop'].forEach(evt =>
+    dropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+    })
+  );
+
+  dropzone.addEventListener('drop', (e) => {
+    const file = e.dataTransfer.files[0];
+    if (file) setFile(file);
+  });
+
+  removeFile.addEventListener('click', (e) => {
+    e.stopPropagation();
+    fileInput.value = '';
+    setFile(null);
+  });
+
+  submitBtn.addEventListener('click', async () => {
+    if (!selectedFile) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Uploading…';
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    try {
+      const res = await fetch('/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+
+      statusEl.className = 'status visible ' + (data.success ? 'success' : 'error');
+
+      if (data.success) {
+        statusEl.innerHTML = `
+          <div class="stamp-row">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="#2F6F62" stroke-width="1.6"/>
+              <path d="M7.5 12.5l3 3 6-6.5" stroke="#2F6F62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Received
+          </div>
+          Stored as ${data.fileName}. It's now attached to your claim.
+        `;
+        setFile(null);
+        fileInput.value = '';
+      } else {
+        statusEl.textContent = data.message || 'The upload did not go through. Please try again.';
+      }
+    } catch (e) {
+      statusEl.className = 'status visible error';
+      statusEl.textContent = 'The upload did not go through: ' + e.message;
+    } finally {
+      submitBtn.disabled = !selectedFile;
+      submitBtn.textContent = 'Upload document';
+    }
+  });
+</script>
+
+</body>
+</html>

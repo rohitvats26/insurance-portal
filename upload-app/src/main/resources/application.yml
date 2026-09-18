@@ -1,0 +1,19 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 25MB
+      max-request-size: 25MB
+
+aws:
+  region: ${AWS_REGION:ap-south-1}
+  s3:
+    bucket-name: ${S3_BUCKET_NAME:insurance-portal-uploads}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
