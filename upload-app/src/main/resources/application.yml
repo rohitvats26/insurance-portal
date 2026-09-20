@@ -8,9 +8,9 @@ spring:
       max-request-size: 25MB
 
 aws:
-  region: ${AWS_REGION:ap-south-1}
+  region: ${AWS_REGION:us-east-1}
   s3:
-    bucket-name: ${S3_BUCKET_NAME:insurance-portal-uploads}
+    bucket-name: ${S3_BUCKET_NAME:insurance-portal-documents}
 
 management:
   endpoints:

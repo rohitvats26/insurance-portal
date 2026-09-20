@@ -1,274 +1,439 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Claims Document Intake</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --paper: #F5F6F2;
-    --panel: #FFFFFF;
-    --ink: #1B2430;
-    --ink-muted: #5B6472;
-    --line: #DADDD4;
-    --seal: #2F6F62;
-    --seal-dark: #234F45;
-    --seal-soft: #E7F0EC;
-    --alert: #9C3B2E;
-    --alert-soft: #F6E9E6;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claims Document Intake</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #F5F6F2;
+      --panel: #FFFFFF;
+      --ink: #1B2430;
+      --ink-muted: #5B6472;
+      --line: #DADDD4;
+      --seal: #2F6F62;
+      --seal-dark: #234F45;
+      --seal-soft: #E7F0EC;
+      --alert: #9C3B2E;
+      --alert-soft: #F6E9E6;
+      --card-shadow: 0 1px 2px rgba(27,36,48,0.04), 0 6px 20px rgba(27,36,48,0.06);
+    }
 
-  * { box-sizing: border-box; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --paper: #14181A;
+        --panel: #1D2224;
+        --ink: #EDEEEA;
+        --ink-muted: #9AA1A6;
+        --line: #33393C;
+        --seal: #4CA98A;
+        --seal-dark: #6FC3A6;
+        --seal-soft: #1B2E28;
+        --alert: #E08A73;
+        --alert-soft: #2E1F1B;
+        --card-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+      }
+    }
+    :root[data-theme="dark"] {
+      --paper: #14181A;
+      --panel: #1D2224;
+      --ink: #EDEEEA;
+      --ink-muted: #9AA1A6;
+      --line: #33393C;
+      --seal: #4CA98A;
+      --seal-dark: #6FC3A6;
+      --seal-soft: #1B2E28;
+      --alert: #E08A73;
+      --alert-soft: #2E1F1B;
+      --card-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    }
 
-  body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'Public Sans', -apple-system, sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
+    * { box-sizing: border-box; }
 
-  header {
-    border-bottom: 1px solid var(--line);
-    padding: 20px 32px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+    html { background: var(--paper); }
 
-  header svg { flex-shrink: 0; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Public Sans', -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
 
-  header .brand {
-    font-size: 14.5px;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-  }
+    .accent-bar {
+      height: 3px;
+      background: linear-gradient(90deg, var(--seal) 0%, var(--seal) 60%, var(--seal-dark) 100%);
+    }
 
-  header .brand small {
-    display: block;
-    font-weight: 400;
-    color: var(--ink-muted);
-    font-size: 12.5px;
-    margin-top: 1px;
-  }
+    header {
+      border-bottom: 1px solid var(--line);
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--panel);
+      flex-wrap: wrap;
+    }
 
-  main {
-    max-width: 880px;
-    margin: 0 auto;
-    padding: 56px 32px 80px;
-  }
+    @media (max-width: 480px) {
+      header .help-link span { display: none; }
+    }
 
-  h1 {
-    font-family: 'Source Serif 4', Georgia, serif;
-    font-weight: 600;
-    font-size: 34px;
-    line-height: 1.2;
-    margin: 0 0 10px;
-    max-width: 20ch;
-  }
+    header .header-left { display: flex; align-items: center; gap: 12px; }
 
-  .lede {
-    color: var(--ink-muted);
-    font-size: 15.5px;
-    line-height: 1.6;
-    max-width: 52ch;
-    margin: 0 0 44px;
-  }
+    header .help-link {
+      font-size: 13.5px;
+      color: var(--ink-muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    header .help-link:hover { color: var(--seal-dark); }
 
-  .layout {
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    gap: 48px;
-  }
+    header svg { flex-shrink: 0; }
 
-  @media (max-width: 720px) {
-    .layout { grid-template-columns: 1fr; gap: 36px; }
-    main { padding: 40px 20px 60px; }
-    h1 { font-size: 28px; }
-  }
+    header .brand {
+      font-size: 14.5px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
 
-  .requirements h2 {
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--ink-muted);
-    margin: 0 0 16px;
-  }
+    header .brand small {
+      display: block;
+      font-weight: 400;
+      color: var(--ink-muted);
+      font-size: 12.5px;
+      margin-top: 1px;
+    }
 
-  .requirements ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
+    main {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 56px 32px 80px;
+    }
 
-  .requirements li {
-    display: flex;
-    gap: 10px;
-    padding: 12px 0;
-    border-top: 1px solid var(--line);
-    font-size: 14.5px;
-    line-height: 1.5;
-  }
-  .requirements li:last-child { border-bottom: 1px solid var(--line); }
+    h1 {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-weight: 600;
+      font-size: 34px;
+      line-height: 1.2;
+      margin: 0 0 10px;
+      max-width: 20ch;
+    }
 
-  .requirements li .dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--seal);
-    margin-top: 7px;
-    flex-shrink: 0;
-  }
+    .lede {
+      color: var(--ink-muted);
+      font-size: 15.5px;
+      line-height: 1.6;
+      max-width: 52ch;
+      margin: 0 0 44px;
+    }
 
-  .requirements .note {
-    margin-top: 20px;
-    font-size: 13px;
-    color: var(--ink-muted);
-    line-height: 1.6;
-  }
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 0;
+    }
 
-  .dropzone {
-    background: var(--panel);
-    border: 1.5px dashed var(--line);
-    border-radius: 6px;
-    padding: 40px 28px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.15s ease, background 0.15s ease;
-  }
+    .requirements {
+      padding: 28px 32px 28px 0;
+      border-right: 1px solid var(--line);
+    }
 
-  .dropzone.dragover {
-    border-color: var(--seal);
-    background: var(--seal-soft);
-  }
+    .upload-panel.card {
+      margin-left: 32px;
+    }
 
-  .dropzone .icon {
-    margin-bottom: 14px;
-  }
+    @media (max-width: 720px) {
+      .layout { grid-template-columns: 1fr; }
+      .requirements { padding: 0 0 28px; border-right: none; border-bottom: 1px solid var(--line); }
+      .upload-panel.card { margin-left: 0; }
+      main { padding: 40px 20px 60px; }
+      h1 { font-size: 28px; }
+    }
 
-  .dropzone p {
-    margin: 0;
-    font-size: 15px;
-  }
+    .requirements h2 {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      margin: 0 0 16px;
+    }
 
-  .dropzone .browse {
-    color: var(--seal-dark);
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
+    .requirements ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
 
-  .dropzone .hint {
-    margin-top: 6px;
-    font-size: 12.5px;
-    color: var(--ink-muted);
-  }
+    .requirements li {
+      display: flex;
+      gap: 10px;
+      padding: 12px 0;
+      border-top: 1px solid var(--line);
+      font-size: 14.5px;
+      line-height: 1.5;
+    }
+    .requirements li:last-child { border-bottom: 1px solid var(--line); }
 
-  input[type="file"] { display: none; }
+    .requirements li .dot {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--seal-soft);
+      margin-top: 1px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .requirements li .dot svg { display: block; }
 
-  .file-chip {
-    display: none;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 16px;
-    padding: 12px 16px;
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    font-size: 14px;
-  }
+    .requirements .note {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--ink-muted);
+      line-height: 1.6;
+    }
 
-  .file-chip.visible { display: flex; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      padding: 28px;
+    }
 
-  .file-chip .name { font-weight: 500; word-break: break-all; padding-right: 12px; }
-  .file-chip .remove {
-    background: none; border: none; cursor: pointer;
-    color: var(--ink-muted); font-size: 13px; text-decoration: underline;
-    flex-shrink: 0;
-  }
+    .trust-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 18px;
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      line-height: 1.55;
+    }
+    .trust-note svg { flex-shrink: 0; margin-top: 1px; }
 
-  .submit-row { margin-top: 20px; }
+    .dropzone {
+      background: var(--paper);
+      border: 1.5px dashed var(--line);
+      border-radius: 6px;
+      padding: 40px 28px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
 
-  button.submit {
-    background: var(--seal);
-    color: #fff;
-    border: none;
-    padding: 12px 24px;
-    font-family: inherit;
-    font-size: 14.5px;
-    font-weight: 600;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+    .dropzone.dragover {
+      border-color: var(--seal);
+      background: var(--seal-soft);
+    }
 
-  button.submit:disabled {
-    background: #A9B0AC;
-    cursor: not-allowed;
-  }
+    .dropzone.hidden { display: none; }
 
-  button.submit:hover:not(:disabled) { background: var(--seal-dark); }
+    .dropzone .icon { margin-bottom: 14px; transition: transform 0.18s ease; }
+    .dropzone:hover .icon { transform: translateY(-3px); }
 
-  .status {
-    margin-top: 24px;
-    padding: 16px 18px;
-    border-radius: 6px;
-    font-size: 14px;
-    line-height: 1.5;
-    display: none;
-  }
+    .dropzone p { margin: 0; font-size: 15px; }
 
-  .status.visible { display: block; }
+    .dropzone .browse {
+      color: var(--seal-dark);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
 
-  .status.success {
-    background: var(--seal-soft);
-    border: 1px solid var(--seal);
-    color: var(--seal-dark);
-  }
+    .dropzone .hint {
+      margin-top: 6px;
+      font-size: 12.5px;
+      color: var(--ink-muted);
+    }
 
-  .status.error {
-    background: var(--alert-soft);
-    border: 1px solid var(--alert);
-    color: var(--alert);
-  }
+    input[type="file"] { display: none; }
 
-  .status .stamp-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
+    .file-chip {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 14px;
+    }
 
-  .status .stamp-row svg {
-    animation: stampIn 0.35s ease;
-  }
+    .file-chip.visible { display: flex; }
 
-  @keyframes stampIn {
-    from { transform: scale(0.6) rotate(-8deg); opacity: 0; }
-    to { transform: scale(1) rotate(0deg); opacity: 1; }
-  }
+    .file-chip .name { font-weight: 500; word-break: break-all; padding-right: 12px; flex: 1; }
 
-  @media (prefers-reduced-motion: reduce) {
-    .status .stamp-row svg { animation: none; }
-  }
+    .file-badge {
+      flex-shrink: 0;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: 3px 7px;
+      border-radius: 4px;
+      background: var(--seal-soft);
+      color: var(--seal-dark);
+      margin-right: 10px;
+    }
 
-  :focus-visible {
-    outline: 2px solid var(--seal-dark);
-    outline-offset: 2px;
-  }
-</style>
+    .file-chip .remove {
+      background: none; border: none; cursor: pointer;
+      color: var(--ink-muted); font-size: 13px; text-decoration: underline;
+      flex-shrink: 0;
+    }
+
+    .submit-row {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    button.submit {
+      background: var(--seal);
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 600;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      box-shadow: 0 1px 2px rgba(35,79,69,0.15), 0 2px 8px rgba(35,79,69,0.12);
+      transition: box-shadow 0.15s ease, background 0.15s ease, transform 0.1s ease;
+    }
+
+    button.submit:disabled { background: #A9B0AC; cursor: not-allowed; box-shadow: none; }
+    button.submit:hover:not(:disabled) {
+      background: var(--seal-dark);
+      box-shadow: 0 2px 4px rgba(35,79,69,0.2), 0 4px 12px rgba(35,79,69,0.18);
+    }
+    button.submit:active:not(:disabled) { transform: translateY(1px); }
+
+    button.secondary {
+      background: none;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      padding: 11px 20px;
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 600;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button.secondary:hover { border-color: var(--ink-muted); }
+
+    .spinner {
+      width: 15px; height: 15px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .progress-track {
+      display: none;
+      margin-top: 18px;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--line);
+      overflow: hidden;
+    }
+    .progress-track.visible { display: block; }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--seal);
+      transition: width 0.15s ease;
+    }
+    .progress-label {
+      display: none;
+      margin-top: 6px;
+      font-size: 12.5px;
+      color: var(--ink-muted);
+    }
+    .progress-label.visible { display: block; }
+
+    .result {
+      margin-top: 26px;
+      padding: 20px;
+      border-radius: 8px;
+      display: none;
+    }
+    .result.visible { display: block; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    .result.success { background: var(--seal-soft); border: 1px solid var(--seal); }
+    .result.error { background: var(--alert-soft); border: 1px solid var(--alert); }
+
+    .result-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .result-stamp { flex-shrink: 0; animation: stampIn 0.35s ease; }
+    @keyframes stampIn {
+      from { transform: scale(0.6) rotate(-8deg); opacity: 0; }
+      to { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .result-stamp { animation: none; }
+    }
+
+    .result-title {
+      font-weight: 600;
+      font-size: 15px;
+      margin: 0 0 4px;
+    }
+    .result.success .result-title { color: var(--seal-dark); }
+    .result.error .result-title { color: var(--alert); }
+
+    .result-detail {
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .result-actions {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+    }
+
+    :focus-visible { outline: 2px solid var(--seal-dark); outline-offset: 2px; }
+  </style>
 </head>
 <body>
+<div class="accent-bar"></div>
 
 <header>
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-    <path d="M12 2L4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3z" stroke="#1B2430" stroke-width="1.4" stroke-linejoin="round"/>
-  </svg>
-  <div class="brand">
-    Meridian Assurance
-    <small>Claims document intake</small>
+  <div class="header-left">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2L4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3z" stroke="#1B2430" stroke-width="1.4" stroke-linejoin="round"/>
+    </svg>
+    <div class="brand">
+      Meridian Assurance
+      <small>Claims document intake</small>
+    </div>
   </div>
+  <a class="help-link" href="#">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#5B6472" stroke-width="1.5"/><path d="M9.5 9a2.5 2.5 0 114 2c-.6.6-1.5 1-1.5 2.2" stroke="#5B6472" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="17" r="0.9" fill="#5B6472"/></svg>
+    <span>Need help with this step?</span>
+  </a>
 </header>
 
 <main>
@@ -279,14 +444,15 @@
     <div class="requirements">
       <h2>What to include</h2>
       <ul>
-        <li><span class="dot"></span>A copy of your identity proof</li>
-        <li><span class="dot"></span>Your completed claim form</li>
-        <li><span class="dot"></span>Any supporting evidence — photos, receipts, or reports</li>
+        <li><span class="dot"><svg width="9" height="9" viewBox="0 0 24 24" fill="none"><path d="M4 12.5l5 5L20 6" stroke="#2F6F62" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>A copy of your identity proof</li>
+        <li><span class="dot"><svg width="9" height="9" viewBox="0 0 24 24" fill="none"><path d="M4 12.5l5 5L20 6" stroke="#2F6F62" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Your completed claim form</li>
+        <li><span class="dot"><svg width="9" height="9" viewBox="0 0 24 24" fill="none"><path d="M4 12.5l5 5L20 6" stroke="#2F6F62" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Any supporting evidence — photos, receipts, or reports</li>
       </ul>
       <p class="note">Accepted formats: PDF, JPG, PNG. One file per upload, up to 25 MB. If you have several documents, upload them one at a time.</p>
     </div>
 
-    <div class="upload-panel">
+    <div class="upload-panel card">
+
       <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Choose a file to upload">
         <div class="icon">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -300,15 +466,36 @@
       <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" />
 
       <div class="file-chip" id="fileChip">
+        <span class="file-badge" id="fileBadge"></span>
         <span class="name" id="fileName"></span>
         <button class="remove" id="removeFile" type="button">Remove</button>
       </div>
 
-      <div class="submit-row">
-        <button class="submit" id="submitBtn" disabled>Upload document</button>
+      <div class="submit-row" id="submitRow">
+        <button class="submit" id="submitBtn" disabled>
+          <span id="submitBtnLabel">Upload document</span>
+        </button>
       </div>
 
-      <div class="status" id="status"></div>
+      <div class="progress-track" id="progressTrack"><div class="progress-fill" id="progressFill"></div></div>
+      <p class="progress-label" id="progressLabel"></p>
+
+      <div class="result" id="result">
+        <div class="result-row">
+          <span class="result-stamp" id="resultStamp"></span>
+          <div>
+            <p class="result-title" id="resultTitle"></p>
+            <p class="result-detail" id="resultDetail"></p>
+          </div>
+        </div>
+        <div class="result-actions" id="resultActions"></div>
+      </div>
+
+      <p class="trust-note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z" stroke="#5B6472" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        Your documents are encrypted in transit and at rest, and only visible to your assigned claims adjuster.
+      </p>
+
     </div>
   </div>
 </main>
@@ -317,25 +504,60 @@
   const dropzone = document.getElementById('dropzone');
   const fileInput = document.getElementById('fileInput');
   const fileChip = document.getElementById('fileChip');
+  const fileBadge = document.getElementById('fileBadge');
   const fileNameEl = document.getElementById('fileName');
   const removeFile = document.getElementById('removeFile');
   const submitBtn = document.getElementById('submitBtn');
-  const statusEl = document.getElementById('status');
+  const submitBtnLabel = document.getElementById('submitBtnLabel');
+  const progressTrack = document.getElementById('progressTrack');
+  const progressFill = document.getElementById('progressFill');
+  const progressLabel = document.getElementById('progressLabel');
+  const result = document.getElementById('result');
+  const resultStamp = document.getElementById('resultStamp');
+  const resultTitle = document.getElementById('resultTitle');
+  const resultDetail = document.getElementById('resultDetail');
+  const resultActions = document.getElementById('resultActions');
+
+  const CHECK_SVG = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="10" stroke="#2F6F62" stroke-width="1.6"/>
+      <path d="M7.5 12.5l3 3 6-6.5" stroke="#2F6F62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+
+  const CROSS_SVG = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="10" stroke="#9C3B2E" stroke-width="1.6"/>
+      <path d="M9 9l6 6M15 9l-6 6" stroke="#9C3B2E" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>`;
 
   let selectedFile = null;
 
+  function resetToIdle() {
+    selectedFile = null;
+    fileInput.value = '';
+    fileChip.classList.remove('visible');
+    dropzone.classList.remove('hidden');
+    submitBtn.disabled = true;
+    submitBtnLabel.textContent = 'Upload document';
+    submitBtn.querySelector('.spinner')?.remove();
+    progressTrack.classList.remove('visible');
+    progressLabel.classList.remove('visible');
+    progressFill.style.width = '0%';
+    result.className = 'result';
+    resultActions.innerHTML = '';
+  }
+
   function setFile(file) {
     selectedFile = file;
+    result.className = 'result';
     if (file) {
       fileNameEl.textContent = file.name;
+      const ext = file.name.split('.').pop().toUpperCase();
+      fileBadge.textContent = ext === 'JPEG' ? 'JPG' : ext;
       fileChip.classList.add('visible');
       submitBtn.disabled = false;
     } else {
       fileChip.classList.remove('visible');
       submitBtn.disabled = true;
     }
-    statusEl.className = 'status';
-    statusEl.textContent = '';
   }
 
   dropzone.addEventListener('click', () => fileInput.click());
@@ -348,19 +570,11 @@
   });
 
   ['dragenter', 'dragover'].forEach(evt =>
-    dropzone.addEventListener(evt, (e) => {
-      e.preventDefault();
-      dropzone.classList.add('dragover');
-    })
+          dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.add('dragover'); })
   );
-
   ['dragleave', 'drop'].forEach(evt =>
-    dropzone.addEventListener(evt, (e) => {
-      e.preventDefault();
-      dropzone.classList.remove('dragover');
-    })
+          dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); })
   );
-
   dropzone.addEventListener('drop', (e) => {
     const file = e.dataTransfer.files[0];
     if (file) setFile(file);
@@ -368,49 +582,121 @@
 
   removeFile.addEventListener('click', (e) => {
     e.stopPropagation();
-    fileInput.value = '';
-    setFile(null);
+    resetToIdle();
   });
 
-  submitBtn.addEventListener('click', async () => {
+  function showSuccess(data) {
+    dropzone.classList.add('hidden');
+    fileChip.classList.remove('visible');
+    document.getElementById('submitRow').style.display = 'none';
+
+    result.className = 'result visible success';
+    resultStamp.innerHTML = CHECK_SVG;
+    resultTitle.textContent = 'Received';
+    resultDetail.textContent = `Stored as ${data.fileName}. It's now attached to your claim.`;
+
+    resultActions.innerHTML = '';
+    const anotherBtn = document.createElement('button');
+    anotherBtn.className = 'submit';
+    anotherBtn.type = 'button';
+    anotherBtn.textContent = 'Upload another document';
+    anotherBtn.addEventListener('click', () => {
+      document.getElementById('submitRow').style.display = 'flex';
+      resetToIdle();
+    });
+    resultActions.appendChild(anotherBtn);
+  }
+
+  function showError(message, { canRetry = true } = {}) {
+    result.className = 'result visible error';
+    resultStamp.innerHTML = CROSS_SVG;
+    resultTitle.textContent = "Couldn't upload that file";
+    resultDetail.textContent = message;
+
+    resultActions.innerHTML = '';
+    if (canRetry && selectedFile) {
+      const retryBtn = document.createElement('button');
+      retryBtn.className = 'submit';
+      retryBtn.type = 'button';
+      retryBtn.textContent = 'Try again';
+      retryBtn.addEventListener('click', () => startUpload());
+      resultActions.appendChild(retryBtn);
+    }
+    const chooseBtn = document.createElement('button');
+    chooseBtn.className = 'secondary';
+    chooseBtn.type = 'button';
+    chooseBtn.textContent = 'Choose a different file';
+    chooseBtn.addEventListener('click', () => resetToIdle());
+    resultActions.appendChild(chooseBtn);
+
+    submitBtn.disabled = false;
+    submitBtnLabel.textContent = 'Upload document';
+    submitBtn.querySelector('.spinner')?.remove();
+    progressTrack.classList.remove('visible');
+    progressLabel.classList.remove('visible');
+  }
+
+  function startUpload() {
     if (!selectedFile) return;
 
+    result.className = 'result';
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Uploading…';
+    submitBtnLabel.textContent = 'Uploading…';
+    const spinner = document.createElement('span');
+    spinner.className = 'spinner';
+    submitBtn.prepend(spinner);
+
+    progressTrack.classList.add('visible');
+    progressLabel.classList.add('visible');
+    progressFill.style.width = '0%';
+    progressLabel.textContent = 'Starting upload…';
 
     const formData = new FormData();
     formData.append('file', selectedFile);
 
-    try {
-      const res = await fetch('/upload', { method: 'POST', body: formData });
-      const data = await res.json();
+    const xhr = new XMLHttpRequest();
 
-      statusEl.className = 'status visible ' + (data.success ? 'success' : 'error');
-
-      if (data.success) {
-        statusEl.innerHTML = `
-          <div class="stamp-row">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="#2F6F62" stroke-width="1.6"/>
-              <path d="M7.5 12.5l3 3 6-6.5" stroke="#2F6F62" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Received
-          </div>
-          Stored as ${data.fileName}. It's now attached to your claim.
-        `;
-        setFile(null);
-        fileInput.value = '';
-      } else {
-        statusEl.textContent = data.message || 'The upload did not go through. Please try again.';
+    xhr.upload.addEventListener('progress', (e) => {
+      if (e.lengthComputable) {
+        const pct = Math.round((e.loaded / e.total) * 100);
+        progressFill.style.width = pct + '%';
+        progressLabel.textContent = pct < 100 ? `Uploading… ${pct}%` : 'Finishing up…';
       }
-    } catch (e) {
-      statusEl.className = 'status visible error';
-      statusEl.textContent = 'The upload did not go through: ' + e.message;
-    } finally {
-      submitBtn.disabled = !selectedFile;
-      submitBtn.textContent = 'Upload document';
-    }
-  });
+    });
+
+    xhr.addEventListener('load', () => {
+      progressTrack.classList.remove('visible');
+      progressLabel.classList.remove('visible');
+
+      let data;
+      try { data = JSON.parse(xhr.responseText); } catch { data = null; }
+
+      if (xhr.status >= 200 && xhr.status < 300 && data && data.success) {
+        showSuccess(data);
+      } else {
+        const message = (data && data.message) || `The server returned an unexpected response (status ${xhr.status}). Please try again.`;
+        showError(message);
+      }
+    });
+
+    xhr.addEventListener('error', () => {
+      progressTrack.classList.remove('visible');
+      progressLabel.classList.remove('visible');
+      showError("We couldn't reach the server. Check your connection and try again.");
+    });
+
+    xhr.addEventListener('timeout', () => {
+      progressTrack.classList.remove('visible');
+      progressLabel.classList.remove('visible');
+      showError('The upload timed out before finishing. Please try again.');
+    });
+
+    xhr.open('POST', '/upload');
+    xhr.timeout = 60000;
+    xhr.send(formData);
+  }
+
+  submitBtn.addEventListener('click', startUpload);
 </script>
 
 </body>

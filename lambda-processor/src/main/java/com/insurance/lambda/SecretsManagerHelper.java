@@ -35,15 +35,15 @@ public class SecretsManagerHelper {
                 + json.getString("username") + "' from secret " + secretArn);
 
         return new DbCredentials(
-                json.getString("host"),
-                json.getInt("port"),
-                json.getString("dbname"),
+                System.getenv("DB_HOST"),
+                System.getenv().getOrDefault("DB_PORT", "3306"),
+                System.getenv("DB_NAME"),
                 json.getString("username"),
                 json.getString("password")
         );
     }
 
-    public record DbCredentials(String host, int port, String dbName, String username, String password) {
+    public record DbCredentials(String host, String port, String dbName, String username, String password) {
         public String jdbcUrl() {
             return "jdbc:mysql://" + host + ":" + port + "/" + dbName
                     + "?useSSL=true&serverTimezone=UTC";

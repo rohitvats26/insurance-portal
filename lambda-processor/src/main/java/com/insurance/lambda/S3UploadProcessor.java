@@ -32,7 +32,7 @@ import java.time.Instant;
 public class S3UploadProcessor implements RequestHandler<S3Event, String> {
 
     private final S3Client s3Client = S3Client.builder()
-            .region(Region.of(System.getenv().getOrDefault("AWS_REGION", "ap-south-1")))
+            .region(Region.of(System.getenv().getOrDefault("AWS_REGION", "us-east-1")))
             .build();
 
     @Override
